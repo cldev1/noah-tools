@@ -30,7 +30,7 @@ Use the project scripts: install, then run the development and build scripts.
 ## GitHub Pages
 
 Vite base is set to /noah-germ-scanner/ for project Pages.
-See .github/workflows/deploy.yml for the build and deploy pipeline.
+Site is published from the gh-pages branch. Sample Actions file: docs/github-pages-workflow.yml.
 
 ## Stack
 
