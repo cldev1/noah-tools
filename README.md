@@ -31,6 +31,8 @@ Photos stay on the device. Camera needs HTTPS and permission; if denied, use gal
 3. Highlight distortion pairs (Greenland vs Africa, Alaska vs Brazil, Europe vs S. America)
 4. Read the how-stretched tip — Reset anytime
 
+Coastlines use Natural Earth 110m land polygons (public domain) with real country/region highlights under d3-geo Mercator and Equal Earth.
+
 Live: https://cldev1.github.io/noah-tools/
 
 Just for fun - not medical advice and not medically accurate.
@@ -47,4 +49,5 @@ Site is published from the gh-pages branch. Sample Actions file: docs/github-pag
 ## Stack
 
 - Vite + React + TypeScript
+- d3-geo (Mercator + Equal Earth) + Natural Earth 110m GeoJSON
 - Plain CSS (soft mint / peach / sky palette, large tap targets)

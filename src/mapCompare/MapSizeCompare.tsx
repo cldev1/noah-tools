@@ -1,6 +1,12 @@
 import { geoEqualEarth, geoMercator, geoPath } from 'd3-geo'
 import { useMemo, useState } from 'react'
-import { DISTORTION_PAIRS, featureCollection, type DistortionPair } from './worldLand'
+import {
+  DISTORTION_PAIRS,
+  featureCollection,
+  highlightFeatures,
+  MAP_DATA_RESOLUTION,
+  type DistortionPair,
+} from './worldLand'
 
 export type MapViewMode = 'mercator' | 'actual' | 'side' | 'wipe'
 
@@ -11,65 +17,98 @@ type Props = {
 const W = 960
 const H = 480
 
+type ProjectedLand = {
+  id: string
+  mercD: string
+  equalD: string
+  highlight: 'a' | 'b' | null
+  kind: 'land' | 'highlight'
+}
+
 function useProjectedPaths(highlight: DistortionPair | null) {
   return useMemo(() => {
-    const fc = featureCollection()
+    const landFc = featureCollection()
     const merc = geoMercator().fitExtent(
       [
         [24, 24],
         [W - 24, H - 24],
       ],
-      fc,
+      landFc,
     )
     const equal = geoEqualEarth().fitExtent(
       [
         [24, 24],
         [W - 24, H - 24],
       ],
-      fc,
+      landFc,
     )
     const mercPath = geoPath(merc)
     const equalPath = geoPath(equal)
 
-    const lands = fc.features.map((f) => {
-      const id = String(f.id)
+    const lands: ProjectedLand[] = landFc.features.map((f, i) => {
+      const id = String(f.id ?? f.properties.id ?? `land-${i}`)
+      return {
+        id,
+        mercD: mercPath(f) ?? '',
+        equalD: equalPath(f) ?? '',
+        highlight: null,
+        kind: 'land' as const,
+      }
+    })
+
+    const overlays: ProjectedLand[] = highlightFeatures().map((f) => {
+      const id = String(f.id ?? f.properties.id)
       const isA = highlight?.aId === id
       const isB = highlight?.bId === id
       return {
         id,
-        name: f.properties.name,
         mercD: mercPath(f) ?? '',
         equalD: equalPath(f) ?? '',
-        highlight: isA ? 'a' : isB ? 'b' : null,
+        highlight: isA ? ('a' as const) : isB ? ('b' as const) : null,
+        kind: 'highlight' as const,
       }
     })
 
-    return { lands }
+    // Only draw highlight overlays for the active pair (keeps SVG lean on phones).
+    const activeOverlays = overlays.filter((o) => o.highlight)
+
+    return { lands, overlays: activeOverlays }
   }, [highlight])
 }
 
 function MapSvg({
   kind,
   lands,
+  overlays,
   title,
 }: {
   kind: 'mercator' | 'equal'
-  lands: { id: string; mercD: string; equalD: string; highlight: string | null }[]
+  lands: ProjectedLand[]
+  overlays: ProjectedLand[]
   title: string
 }) {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="map-svg" role="img" aria-label={title}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="map-svg" role="img" aria-label={title || 'World map'}>
       <rect x="0" y="0" width={W} height={H} className="map-ocean" rx="28" />
       {lands.map((land) => (
         <path
-          key={`${kind}-${land.id}`}
+          key={`${kind}-land-${land.id}`}
           d={kind === 'mercator' ? land.mercD : land.equalD}
-          className={`map-land ${land.highlight ? `hl-${land.highlight}` : ''}`}
+          className="map-land"
         />
       ))}
-      <text x="28" y="42" className="map-label">
-        {title}
-      </text>
+      {overlays.map((land) => (
+        <path
+          key={`${kind}-hl-${land.id}`}
+          d={kind === 'mercator' ? land.mercD : land.equalD}
+          className={`map-land hl-${land.highlight}`}
+        />
+      ))}
+      {title ? (
+        <text x="28" y="42" className="map-label">
+          {title}
+        </text>
+      ) : null}
     </svg>
   )
 }
@@ -99,7 +138,7 @@ export default function MapSizeCompare({ onBack }: Props) {
   const [pairId, setPairId] = useState(DISTORTION_PAIRS[0]!.id)
 
   const pair = DISTORTION_PAIRS.find((p) => p.id === pairId) ?? DISTORTION_PAIRS[0]!
-  const { lands } = useProjectedPaths(pair)
+  const { lands, overlays } = useProjectedPaths(pair)
 
   const reset = () => {
     setView('wipe')
@@ -134,22 +173,26 @@ export default function MapSizeCompare({ onBack }: Props) {
       </div>
 
       <div className="map-stage">
-        {view === 'mercator' && <MapSvg kind="mercator" lands={lands} title="Mercator (stretched)" />}
-        {view === 'actual' && <MapSvg kind="equal" lands={lands} title="Actual size (Equal area)" />}
+        {view === 'mercator' && (
+          <MapSvg kind="mercator" lands={lands} overlays={overlays} title="Mercator (stretched)" />
+        )}
+        {view === 'actual' && (
+          <MapSvg kind="equal" lands={lands} overlays={overlays} title="Actual size (equal area)" />
+        )}
         {view === 'side' && (
           <div className="map-side">
-            <MapSvg kind="mercator" lands={lands} title="Mercator" />
-            <MapSvg kind="equal" lands={lands} title="Actual size" />
+            <MapSvg kind="mercator" lands={lands} overlays={overlays} title="Mercator" />
+            <MapSvg kind="equal" lands={lands} overlays={overlays} title="Actual size" />
           </div>
         )}
         {view === 'wipe' && (
           <div className="map-wipe-wrap">
             <div className="map-wipe-base">
-              <MapSvg kind="equal" lands={lands} title="Actual size ← → Mercator" />
+              <MapSvg kind="equal" lands={lands} overlays={overlays} title="Actual size ← → Mercator" />
             </div>
             <div className="map-wipe-top" style={{ width: `${wipe}%` }}>
               <div className="map-wipe-inner" style={{ width: `${(100 / Math.max(wipe, 1)) * 100}%` }}>
-                <MapSvg kind="mercator" lands={lands} title="" />
+                <MapSvg kind="mercator" lands={lands} overlays={overlays} title="" />
               </div>
             </div>
             <div className="map-wipe-handle" style={{ left: `${wipe}%` }} aria-hidden>
@@ -197,7 +240,9 @@ export default function MapSizeCompare({ onBack }: Props) {
           Back to tools
         </button>
       </div>
-      <p className="footnote">Simplified maps for play — not for navigation.</p>
+      <p className="footnote">
+        Real Natural Earth {MAP_DATA_RESOLUTION} coastlines — for play, not navigation.
+      </p>
     </>
   )
 }
