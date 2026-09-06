@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
 import type { BodyPart, ScanMode, Screen, ToolCard, ToolId } from './types'
 import { modeLabel, partLabel, pretendScan, SCAN_DURATION_MS } from './scanLogic'
-import MapSizeCompare from './mapCompare/MapSizeCompare'
+const MapSizeCompare = lazy(() => import('./mapCompare/MapSizeCompare'))
 
 const TOOLS: ToolCard[] = [
   {
@@ -661,7 +661,9 @@ export default function App() {
       {screen.name === 'home' && <Home onOpenTool={openTool} />}
 
       {screen.name === 'map' && (
-        <MapSizeCompare onBack={() => setScreen({ name: 'home' })} />
+        <Suspense fallback={<p className="screen-sub">Loading map…</p>}>
+          <MapSizeCompare onBack={() => setScreen({ name: 'home' })} />
+        </Suspense>
       )}
 
       {screen.name === 'part' && (

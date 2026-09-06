@@ -748,7 +748,7 @@
   border-radius: 28px;
   overflow: hidden;
   box-shadow: var(--shadow);
-  background: #d7ecff;
+  background: #0d3554;
   margin-bottom: 14px;
 }
 
@@ -759,35 +759,49 @@
   vertical-align: top;
 }
 
-.map-ocean {
-  fill: #b9ddf5;
+.map-ocean-vignette {
+  pointer-events: none;
 }
 
 .map-land {
-  fill: #8bc98b;
-  stroke: #5a9a5a;
-  stroke-width: 0.6;
-  transition: fill 0.2s ease;
+  fill: #8fbc6e;
+  stroke: rgba(32, 58, 40, 0.45);
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+  transition: fill 0.2s ease, stroke 0.2s ease, opacity 0.2s ease;
+}
+
+.map-land-globe {
+  stroke: rgba(20, 40, 30, 0.4);
+  stroke-width: 0.45;
 }
 
 .map-land.hl-a {
-  fill: #ff8f7a;
-  stroke: #d45a45;
-  stroke-width: 2.5;
+  fill: rgba(255, 120, 96, 0.72);
+  stroke: #ff5a3c;
+  stroke-width: 2.4;
 }
 
 .map-land.hl-b {
-  fill: #ffd56b;
-  stroke: #d4a820;
-  stroke-width: 2.5;
+  fill: rgba(255, 214, 90, 0.72);
+  stroke: #e8b020;
+  stroke-width: 2.4;
 }
 
 .map-label {
   font-family: "Nunito", system-ui, sans-serif;
   font-size: 28px;
   font-weight: 800;
-  fill: #2c3e3a;
-  opacity: 0.75;
+  fill: #f4fbff;
+  opacity: 0.88;
+  paint-order: stroke fill;
+  stroke: rgba(8, 28, 44, 0.45);
+  stroke-width: 3px;
+}
+
+.map-label-globe {
+  fill: #eaf6ff;
 }
 
 .map-side {
@@ -870,7 +884,7 @@
 .map-wipe-slider {
   display: block;
   padding: 8px 14px 14px;
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.55));
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.72));
 }
 
 .map-wipe-slider input[type='range'] {
@@ -949,15 +963,20 @@
   cursor: grabbing;
 }
 
-.map-globe-bg {
-  fill: #cfe8fb;
-}
 
 .map-sphere {
-  fill: #9fd0f0;
-  stroke: #6aa9d4;
-  stroke-width: 4;
-  filter: drop-shadow(0 6px 14px rgba(44, 62, 58, 0.18));
+  stroke: none;
+}
+
+.map-sphere-shade,
+.map-sphere-spec {
+  pointer-events: none;
+}
+
+.map-sphere-rim {
+  stroke: rgba(210, 235, 255, 0.35);
+  stroke-width: 2.5;
+  pointer-events: none;
 }
 
 .map-globe-hint {
@@ -965,8 +984,8 @@
   padding: 10px 14px 14px;
   text-align: center;
   font-weight: 800;
-  color: var(--ink-muted);
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.55));
+  color: #e8f4ff;
+  background: linear-gradient(180deg, transparent, rgba(8, 28, 48, 0.85));
   font-size: 0.95rem;
 }
 

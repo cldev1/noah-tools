@@ -1,9 +1,10 @@
 /**
- * Natural Earth 110m land + highlight regions for Map Size Compare.
- * Geometry: public domain (Natural Earth). See data/ne110m.json attribution.
+ * Natural Earth 50m land + highlight regions for Map Size Compare.
+ * Geometry: public domain (Natural Earth). See data/ne50m.json attribution.
+ * Source coasts are 50m, Douglas–Peucker–simplified for a mobile Pages bundle.
  */
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
-import ne110m from './data/ne110m.json'
+import ne50m from './data/ne50m.json'
 
 export type DistortionPair = {
   id: string
@@ -15,8 +16,8 @@ export type DistortionPair = {
   stretchNote: string
 }
 
-export const MAP_DATA_ATTRIBUTION = ne110m.attribution
-export const MAP_DATA_RESOLUTION = ne110m.resolution
+export const MAP_DATA_ATTRIBUTION = ne50m.attribution
+export const MAP_DATA_RESOLUTION = ne50m.resolution
 
 export const DISTORTION_PAIRS: DistortionPair[] = [
   {
@@ -55,14 +56,14 @@ type MapProps = { name: string; id: string; kind: 'land' | 'highlight' }
 
 export type MapFeature = Feature<Polygon | MultiPolygon, MapProps> & { id: string }
 
-/** Base land polygons (Natural Earth 110m). */
+/** Base land polygons (Natural Earth 50m, simplified). */
 export function landFeatureCollection(): FeatureCollection<Polygon | MultiPolygon, MapProps> {
-  return ne110m.land as FeatureCollection<Polygon | MultiPolygon, MapProps>
+  return ne50m.land as FeatureCollection<Polygon | MultiPolygon, MapProps>
 }
 
 /** Highlight region features (greenland, africa, alaska, brazil, europe, samerica). */
 export function highlightFeatures(): MapFeature[] {
-  return ne110m.highlights.features as MapFeature[]
+  return ne50m.highlights.features as MapFeature[]
 }
 
 /** Combined collection used to fit projections (land extent). */
