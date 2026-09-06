@@ -715,3 +715,230 @@
   60% { transform: translateY(-4px) scale(1.08); opacity: 1; }
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
+
+/* —— Map Size Compare —— */
+.tool-card[data-id='map'] .tool-emoji { background: #e4f3ff; }
+
+.map-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.map-seg-btn {
+  min-height: 48px;
+  border-radius: 16px;
+  padding: 10px 8px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+  border: 3px solid transparent;
+}
+
+.map-seg-btn.active {
+  color: var(--ink);
+  border-color: rgba(142, 197, 240, 0.85);
+  background: linear-gradient(180deg, #fff, #eef7ff);
+}
+
+.map-stage {
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: #d7ecff;
+  margin-bottom: 14px;
+}
+
+.map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  vertical-align: top;
+}
+
+.map-ocean {
+  fill: #b9ddf5;
+}
+
+.map-land {
+  fill: #8bc98b;
+  stroke: #5a9a5a;
+  stroke-width: 1.2;
+  transition: fill 0.2s ease;
+}
+
+.map-land.hl-a {
+  fill: #ff8f7a;
+  stroke: #d45a45;
+  stroke-width: 2.5;
+}
+
+.map-land.hl-b {
+  fill: #ffd56b;
+  stroke: #d4a820;
+  stroke-width: 2.5;
+}
+
+.map-label {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  fill: #2c3e3a;
+  opacity: 0.75;
+}
+
+.map-side {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+}
+
+.map-wipe-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.map-wipe-base {
+  width: 100%;
+}
+
+.map-wipe-top {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  border-right: 3px solid #fff;
+  box-shadow: 4px 0 12px rgba(44, 62, 58, 0.18);
+  pointer-events: none;
+}
+
+.map-wipe-inner {
+  height: 100%;
+}
+
+.map-wipe-inner .map-svg {
+  height: 100%;
+}
+
+.map-wipe-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.map-wipe-handle span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow);
+  border: 3px solid var(--sky);
+}
+
+.map-wipe-handle span::before,
+.map-wipe-handle span::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transform: translateY(-50%);
+}
+
+.map-wipe-handle span::before {
+  left: 7px;
+  border-right: 7px solid var(--ink-muted);
+}
+
+.map-wipe-handle span::after {
+  right: 7px;
+  border-left: 7px solid var(--ink-muted);
+}
+
+.map-wipe-slider {
+  display: block;
+  padding: 8px 14px 14px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.55));
+}
+
+.map-wipe-slider input[type='range'] {
+  width: 100%;
+  accent-color: var(--mint-deep);
+  height: 28px;
+}
+
+.map-pairs {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.map-pair-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  min-height: 52px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  border: 3px solid transparent;
+  font-weight: 700;
+}
+
+.map-pair-btn strong {
+  font-size: 0.98rem;
+}
+
+.map-pair-btn.active {
+  border-color: rgba(255, 197, 120, 0.85);
+  background: linear-gradient(180deg, #fff, #fff8ee);
+}
+
+.map-callout {
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border: 3px solid rgba(126, 200, 200, 0.45);
+}
+
+.map-callout-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+.map-callout p {
+  margin: 0 0 8px;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+}
+
+.map-kid-tip {
+  color: var(--ink) !important;
+  font-weight: 800 !important;
+  background: #fff4df;
+  padding: 10px 12px;
+  border-radius: 14px;
+  margin-bottom: 0 !important;
+}
+
+@media (min-width: 420px) {
+  .map-seg {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
-import type { BodyPart, ScanMode, Screen, ToolCard } from './types'
+import type { BodyPart, ScanMode, Screen, ToolCard, ToolId } from './types'
 import { modeLabel, partLabel, pretendScan, SCAN_DURATION_MS } from './scanLogic'
+import MapSizeCompare from './mapCompare/MapSizeCompare'
 
 const TOOLS: ToolCard[] = [
   {
@@ -9,6 +10,13 @@ const TOOLS: ToolCard[] = [
     title: 'Germ Scanner',
     emoji: '🔬',
     blurb: 'Scan tummy or teeth for pretend germs!',
+    status: 'live',
+  },
+  {
+    id: 'map',
+    title: 'Map Size Compare',
+    emoji: '🗺️',
+    blurb: 'See how Mercator stretches the world!',
     status: 'live',
   },
   {
@@ -63,12 +71,12 @@ function TopBar({
   )
 }
 
-function Home({ onOpenGerm }: { onOpenGerm: () => void }) {
+function Home({ onOpenTool }: { onOpenTool: (id: ToolId) => void }) {
   return (
     <>
       <TopBar />
       <h2 className="screen-title">Pick a tool</h2>
-      <p className="screen-sub">A growing kit for Noah — tap Germ Scanner to play.</p>
+      <p className="screen-sub">A growing kit for Noah — tap a Live tool to play.</p>
       <div className="tool-grid">
         {TOOLS.map((tool) => {
           const live = tool.status === 'live'
@@ -79,7 +87,7 @@ function Home({ onOpenGerm }: { onOpenGerm: () => void }) {
               data-id={tool.id}
               className={`tool-card ${live ? 'live' : 'soon'}`}
               disabled={!live}
-              onClick={() => live && onOpenGerm()}
+              onClick={() => live && onOpenTool(tool.id)}
               aria-label={live ? `Open ${tool.title}` : `${tool.title}, coming soon`}
             >
               <div className="tool-emoji" aria-hidden>
@@ -643,10 +651,17 @@ function ResultScreen({
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: 'home' })
 
+  const openTool = (id: ToolId) => {
+    if (id === 'germ') setScreen({ name: 'part' })
+    else if (id === 'map') setScreen({ name: 'map' })
+  }
+
   return (
     <div className="app">
-      {screen.name === 'home' && (
-        <Home onOpenGerm={() => setScreen({ name: 'part' })} />
+      {screen.name === 'home' && <Home onOpenTool={openTool} />}
+
+      {screen.name === 'map' && (
+        <MapSizeCompare onBack={() => setScreen({ name: 'home' })} />
       )}
 
       {screen.name === 'part' && (

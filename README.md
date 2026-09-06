@@ -4,12 +4,13 @@ A kid-friendly multi-tool web app for toddler Noah.
 
 Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
 
-**Germ Scanner** is the first live tool. More tools are on the hub as Coming soon.
+**Germ Scanner** and **Map Size Compare** are live. More tools are on the hub as Coming soon.
 
 ## What is inside
 
 ### Tools hub
 - **Germ Scanner** - Live
+- **Map Size Compare** - Live (Mercator vs actual-size / equal-area wipe)
 - **Hand Wash Coach** - Coming soon
 - **Bath Bubbles Check** - Coming soon
 - **Potty Sticker Chart** - Coming soon
@@ -23,6 +24,12 @@ Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
 6. Scan again, Retake photo, or return to tools
 
 Photos stay on the device. Camera needs HTTPS and permission; if denied, use gallery or illustration.
+
+### Map Size Compare
+1. Pick a view: Mercator, Actual size (equal-area), Side-by-side, or Wipe
+2. Drag the wipe slider to reveal Mercator over the equal-area map
+3. Highlight distortion pairs (Greenland vs Africa, Alaska vs Brazil, Europe vs S. America)
+4. Read the how-stretched tip — Reset anytime
 
 Live: https://cldev1.github.io/noah-tools/
 
