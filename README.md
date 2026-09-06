@@ -10,7 +10,7 @@ Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
 
 ### Tools hub
 - **Germ Scanner** - Live
-- **Map Size Compare** - Live (Mercator vs actual-size / equal-area wipe)
+- **Map Size Compare** - Live (Mercator, Equal Earth, Globe, side-by-side, wipe)
 - **Hand Wash Coach** - Coming soon
 - **Bath Bubbles Check** - Coming soon
 - **Potty Sticker Chart** - Coming soon
@@ -26,12 +26,13 @@ Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
 Photos stay on the device. Camera needs HTTPS and permission; if denied, use gallery or illustration.
 
 ### Map Size Compare
-1. Pick a view: Mercator, Actual size (equal-area), Side-by-side, or Wipe
-2. Drag the wipe slider to reveal Mercator over the equal-area map
-3. Highlight distortion pairs (Greenland vs Africa, Alaska vs Brazil, Europe vs S. America)
-4. Read the how-stretched tip — Reset anytime
+1. Pick a view: Mercator, Equal Earth, Globe, Side-by-side, or Wipe
+2. Drag the wipe slider to reveal Mercator over Equal Earth (side-by-side and wipe compare those two)
+3. Spin the Globe (drag preferred; soft auto-spin when idle)
+4. Highlight distortion pairs (Greenland vs Africa, Alaska vs Brazil, Europe vs S. America)
+5. Read the how-stretched tip — Reset anytime
 
-Coastlines use Natural Earth 110m land polygons (public domain) with real country/region highlights under d3-geo Mercator and Equal Earth.
+Coastlines use Natural Earth 110m land polygons (public domain) with real country/region highlights under d3-geo Mercator, Equal Earth, and Orthographic (Globe).
 
 Live: https://cldev1.github.io/noah-tools/
 

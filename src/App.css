@@ -937,8 +937,47 @@
   margin-bottom: 0 !important;
 }
 
+.map-globe-wrap {
+  position: relative;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.map-globe-wrap:active {
+  cursor: grabbing;
+}
+
+.map-globe-bg {
+  fill: #cfe8fb;
+}
+
+.map-sphere {
+  fill: #9fd0f0;
+  stroke: #6aa9d4;
+  stroke-width: 4;
+  filter: drop-shadow(0 6px 14px rgba(44, 62, 58, 0.18));
+}
+
+.map-globe-hint {
+  margin: 0;
+  padding: 10px 14px 14px;
+  text-align: center;
+  font-weight: 800;
+  color: var(--ink-muted);
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.55));
+  font-size: 0.95rem;
+}
+
 @media (min-width: 420px) {
   .map-seg {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 640px) {
+  .map-seg {
+    grid-template-columns: repeat(5, 1fr);
   }
 }

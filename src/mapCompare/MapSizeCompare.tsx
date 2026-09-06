@@ -1,5 +1,5 @@
-import { geoEqualEarth, geoMercator, geoPath } from 'd3-geo'
-import { useMemo, useState } from 'react'
+import { geoEqualEarth, geoMercator, geoOrthographic, geoPath } from 'd3-geo'
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import {
   DISTORTION_PAIRS,
   featureCollection,
@@ -8,7 +8,7 @@ import {
   type DistortionPair,
 } from './worldLand'
 
-export type MapViewMode = 'mercator' | 'actual' | 'side' | 'wipe'
+export type MapViewMode = 'mercator' | 'equal' | 'globe' | 'side' | 'wipe'
 
 type Props = {
   onBack: () => void
@@ -113,6 +113,136 @@ function MapSvg({
   )
 }
 
+type Rotation = [number, number, number]
+
+function GlobeSvg({ highlight }: { highlight: DistortionPair }) {
+  const [rotation, setRotation] = useState<Rotation>([-20, -20, 0])
+  const dragRef = useRef<{
+    pointerId: number
+    x: number
+    y: number
+    rotation: Rotation
+  } | null>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
+
+  const { lands, overlays, sphereD } = useMemo(() => {
+    const landFc = featureCollection()
+    const projection = geoOrthographic()
+      .rotate(rotation)
+      .fitExtent(
+        [
+          [36, 36],
+          [W - 36, H - 36],
+        ],
+        { type: 'Sphere' },
+      )
+      .clipAngle(90)
+
+    const path = geoPath(projection)
+    const lands = landFc.features.map((f, i) => {
+      const id = String(f.id ?? f.properties.id ?? `land-${i}`)
+      return { id, d: path(f) ?? '' }
+    })
+
+    const overlays = highlightFeatures()
+      .map((f) => {
+        const id = String(f.id ?? f.properties.id)
+        const isA = highlight.aId === id
+        const isB = highlight.bId === id
+        return {
+          id,
+          d: path(f) ?? '',
+          highlight: isA ? ('a' as const) : isB ? ('b' as const) : null,
+        }
+      })
+      .filter((o) => o.highlight)
+
+    return { lands, overlays, sphereD: path({ type: 'Sphere' }) ?? '' }
+  }, [rotation, highlight])
+
+  const onPointerDown = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
+    dragRef.current = {
+      pointerId: e.pointerId,
+      x: e.clientX,
+      y: e.clientY,
+      rotation: [...rotation] as Rotation,
+    }
+  }, [rotation])
+
+  const onPointerMove = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== e.pointerId) return
+    const dx = e.clientX - drag.x
+    const dy = e.clientY - drag.y
+    // Sensitivity scales with stage width so phones and tablets feel similar.
+    const width = wrapRef.current?.clientWidth || 320
+    const k = 180 / Math.max(width, 160)
+    const next: Rotation = [
+      drag.rotation[0] + dx * k,
+      Math.max(-80, Math.min(80, drag.rotation[1] - dy * k)),
+      drag.rotation[2],
+    ]
+    setRotation(next)
+  }, [])
+
+  const endDrag = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    if (dragRef.current?.pointerId === e.pointerId) {
+      dragRef.current = null
+    }
+  }, [])
+
+  // Soft auto-spin when idle (pauses while dragging).
+  useEffect(() => {
+    let raf = 0
+    let last = performance.now()
+    const tick = (now: number) => {
+      const dt = Math.min(40, now - last)
+      last = now
+      if (!dragRef.current) {
+        setRotation((r) => [r[0] + dt * 0.008, r[1], r[2]])
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  return (
+    <div
+      ref={wrapRef}
+      className="map-globe-wrap"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      role="img"
+      aria-label="Globe — drag to spin"
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} className="map-svg map-globe-svg">
+        <rect x="0" y="0" width={W} height={H} className="map-ocean map-globe-bg" rx="28" />
+        <path d={sphereD} className="map-sphere" />
+        {lands.map((land) =>
+          land.d ? <path key={`globe-land-${land.id}`} d={land.d} className="map-land" /> : null,
+        )}
+        {overlays.map((land) =>
+          land.d ? (
+            <path
+              key={`globe-hl-${land.id}`}
+              d={land.d}
+              className={`map-land hl-${land.highlight}`}
+            />
+          ) : null,
+        )}
+        <text x="28" y="42" className="map-label">
+          Globe
+        </text>
+      </svg>
+      <p className="map-globe-hint">👆 Drag to spin the Earth!</p>
+    </div>
+  )
+}
+
 function TopBarLocal({ onBack }: { onBack: () => void }) {
   return (
     <header className="topbar">
@@ -131,6 +261,14 @@ function TopBarLocal({ onBack }: { onBack: () => void }) {
     </header>
   )
 }
+
+const VIEW_OPTIONS = [
+  { id: 'mercator', label: 'Mercator' },
+  { id: 'equal', label: 'Equal Earth' },
+  { id: 'globe', label: 'Globe' },
+  { id: 'side', label: 'Side-by-side' },
+  { id: 'wipe', label: 'Wipe' },
+] as const
 
 export default function MapSizeCompare({ onBack }: Props) {
   const [view, setView] = useState<MapViewMode>('wipe')
@@ -153,14 +291,7 @@ export default function MapSizeCompare({ onBack }: Props) {
       <p className="screen-sub">Mercator stretches the poles. Peek at real sizes!</p>
 
       <div className="map-seg" role="group" aria-label="Map view">
-        {(
-          [
-            { id: 'mercator', label: 'Mercator' },
-            { id: 'actual', label: 'Actual size' },
-            { id: 'side', label: 'Side-by-side' },
-            { id: 'wipe', label: 'Wipe' },
-          ] as const
-        ).map((opt) => (
+        {VIEW_OPTIONS.map((opt) => (
           <button
             key={opt.id}
             type="button"
@@ -176,19 +307,20 @@ export default function MapSizeCompare({ onBack }: Props) {
         {view === 'mercator' && (
           <MapSvg kind="mercator" lands={lands} overlays={overlays} title="Mercator (stretched)" />
         )}
-        {view === 'actual' && (
-          <MapSvg kind="equal" lands={lands} overlays={overlays} title="Actual size (equal area)" />
+        {view === 'equal' && (
+          <MapSvg kind="equal" lands={lands} overlays={overlays} title="Equal Earth (true size)" />
         )}
+        {view === 'globe' && <GlobeSvg highlight={pair} />}
         {view === 'side' && (
           <div className="map-side">
             <MapSvg kind="mercator" lands={lands} overlays={overlays} title="Mercator" />
-            <MapSvg kind="equal" lands={lands} overlays={overlays} title="Actual size" />
+            <MapSvg kind="equal" lands={lands} overlays={overlays} title="Equal Earth" />
           </div>
         )}
         {view === 'wipe' && (
           <div className="map-wipe-wrap">
             <div className="map-wipe-base">
-              <MapSvg kind="equal" lands={lands} overlays={overlays} title="Actual size ← → Mercator" />
+              <MapSvg kind="equal" lands={lands} overlays={overlays} title="Equal Earth ← → Mercator" />
             </div>
             <div className="map-wipe-top" style={{ width: `${wipe}%` }}>
               <div className="map-wipe-inner" style={{ width: `${(100 / Math.max(wipe, 1)) * 100}%` }}>
@@ -199,7 +331,7 @@ export default function MapSizeCompare({ onBack }: Props) {
               <span />
             </div>
             <label className="map-wipe-slider">
-              <span className="sr-only">Reveal Mercator vs actual</span>
+              <span className="sr-only">Reveal Mercator vs Equal Earth</span>
               <input
                 type="range"
                 min={8}
