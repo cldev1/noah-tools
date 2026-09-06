@@ -4,20 +4,15 @@ function rand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-/** Playful pretend scan — not medical. Before modes tend higher; after tend clean/low. */
-export function pretendScan(part: BodyPart, mode: ScanMode): { germPercent: number; isClean: boolean } {
+/** Playful pretend scan — not medical. Before: germs %; after: always fully clean. */
+export function pretendScan(_part: BodyPart, mode: ScanMode): { germPercent: number; isClean: boolean } {
   const before = mode === 'before-potty' || mode === 'before-brushing'
 
-  let germPercent: number
-  if (before) {
-    germPercent = rand(55, 92)
-  } else {
-    germPercent = Math.random() < 0.72 ? rand(0, 12) : rand(13, 28)
+  if (!before) {
+    return { germPercent: 0, isClean: true }
   }
 
-  const cleanThreshold = part === 'teeth' ? 15 : 18
-  const isClean = germPercent <= cleanThreshold
-  return { germPercent, isClean }
+  return { germPercent: rand(55, 92), isClean: false }
 }
 
 export function modeLabel(mode: ScanMode): string {

@@ -19,7 +19,7 @@ Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
 2. Pick a mode (tummy before/after potty; teeth before/after brushing)
 3. Take one photo (camera / capture / gallery) or skip and use the illustration
 4. Watch a scanning bar move up and down over the photo (or art) for a few seconds
-5. See a pretend result with cute germs on the tummy/teeth (or a clean celebration)
+5. See a pretend result — before modes show germs % on the tummy/teeth; after potty/brushing is always fully clean (green tick + celebration)
 6. Scan again, Retake photo, or return to tools
 
 Photos stay on the device. Camera needs HTTPS and permission; if denied, use gallery or illustration.

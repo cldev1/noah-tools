@@ -144,11 +144,11 @@ function ModeSelect({
     part === 'tummy'
       ? [
           { mode: 'before-potty', emoji: '🚽', hint: 'Usually more germs' },
-          { mode: 'after-potty', emoji: '✨', hint: 'Usually cleaner' },
+          { mode: 'after-potty', emoji: '✨', hint: 'Always a clean tummy!' },
         ]
       : [
           { mode: 'before-brushing', emoji: '🍪', hint: 'Usually more germs' },
-          { mode: 'after-brushing', emoji: '🪥', hint: 'Usually cleaner' },
+          { mode: 'after-brushing', emoji: '🪥', hint: 'Always clean teeth!' },
         ]
 
   return (
@@ -584,32 +584,45 @@ function ResultScreen({
       <TopBar subtitle="Germ Scanner" />
       <div className={`result-card ${isClean ? 'clean' : 'germy'}`}>
         <SubjectFrame part={part} photoUrl={photoUrl} showGerms={!isClean} />
-        <div className="result-emoji" aria-hidden>
-          {isClean ? '🎉' : '👾'}
-        </div>
+        {isClean ? (
+          <div className="clean-badge" aria-hidden>
+            <span className="green-tick">✓</span>
+          </div>
+        ) : (
+          <div className="result-emoji" aria-hidden>
+            👾
+          </div>
+        )}
         <h2>{title}</h2>
         <p>
           {modeLabel(mode)} · {partLabel(part)}
         </p>
-        <div className={`percent ${isClean ? 'clean-pct' : ''}`}>
-          <strong>{germPercent}%</strong>
-          <span>pretend germs</span>
-        </div>
         {isClean ? (
-          <div className="confetti" aria-hidden>
-            <span>⭐</span>
-            <span>✨</span>
-            <span>🌟</span>
-            <span>🎈</span>
-          </div>
+          <>
+            <div className="percent clean-pct">
+              <strong>0%</strong>
+              <span>pretend germs</span>
+            </div>
+            <div className="confetti cheer" aria-hidden>
+              <span>⭐</span>
+              <span>✨</span>
+              <span>🌟</span>
+              <span>🎈</span>
+              <span>🎉</span>
+              <span>💫</span>
+            </div>
+            <p className="cheer-line">High five! Looking sparkly and fresh.</p>
+          </>
         ) : (
-          <p className="result-hint">Cute germs popped onto the {partLabel(part).toLowerCase()}!</p>
+          <>
+            <div className="percent">
+              <strong>{germPercent}%</strong>
+              <span>pretend germs</span>
+            </div>
+            <p className="result-hint">Cute germs popped onto the {partLabel(part).toLowerCase()}!</p>
+            <p>Time for a wash or brush — then scan again!</p>
+          </>
         )}
-        <p>
-          {isClean
-            ? 'High five! Looking sparkly and fresh.'
-            : 'Time for a wash or brush — then scan again!'}
-        </p>
       </div>
       <div className="actions">
         <button type="button" className="btn primary" onClick={onAgain}>
