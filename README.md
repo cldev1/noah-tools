@@ -17,9 +17,14 @@ Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
 ### Germ Scanner flow
 1. Pick a body part: **Tummy** or **Teeth**
 2. Pick a mode (tummy before/after potty; teeth before/after brushing)
-3. Watch a playful scan animation (different art for tummy vs teeth)
-4. See a pretend result - before modes usually show more germs; after usually cleaner
-5. Scan again or return to tools
+3. Take one photo (camera / capture / gallery) or skip and use the illustration
+4. Watch a scanning bar move up and down over the photo (or art) for a few seconds
+5. See a pretend result with cute germs on the tummy/teeth (or a clean celebration)
+6. Scan again, Retake photo, or return to tools
+
+Photos stay on the device. Camera needs HTTPS and permission; if denied, use gallery or illustration.
+
+Live: https://cldev1.github.io/noah-tools/
 
 Just for fun - not medical advice and not medically accurate.
 ## Run locally
@@ -29,7 +34,7 @@ Use the project scripts: install, then run the development and build scripts.
 
 ## GitHub Pages
 
-Vite base is set to /noah-germ-scanner/ for project Pages.
+Vite base is set to /noah-tools/ for project Pages.
 Site is published from the gh-pages branch. Sample Actions file: docs/github-pages-workflow.yml.
 
 ## Stack

@@ -5,8 +5,16 @@ export type Screen =
   | { name: 'home' }
   | { name: 'part' }
   | { name: 'mode'; part: BodyPart }
-  | { name: 'scan'; part: BodyPart; mode: ScanMode }
-  | { name: 'result'; part: BodyPart; mode: ScanMode; germPercent: number; isClean: boolean }
+  | { name: 'photo'; part: BodyPart; mode: ScanMode; photoUrl?: string | null }
+  | { name: 'scan'; part: BodyPart; mode: ScanMode; photoUrl: string | null }
+  | {
+      name: 'result'
+      part: BodyPart
+      mode: ScanMode
+      photoUrl: string | null
+      germPercent: number
+      isClean: boolean
+    }
 
 export type ToolCard = {
   id: string
