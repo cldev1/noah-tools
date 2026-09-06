@@ -657,7 +657,7 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div className={`app${screen.name === 'map' ? ' app-map' : ''}`}>
       {screen.name === 'home' && <Home onOpenTool={openTool} />}
 
       {screen.name === 'map' && (

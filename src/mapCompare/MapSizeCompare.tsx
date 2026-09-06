@@ -2,6 +2,7 @@ import { geoEqualEarth, geoMercator, geoOrthographic, geoPath } from 'd3-geo'
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import {
   DISTORTION_PAIRS,
+  classroomFitFeature,
   featureCollection,
   highlightFeatures,
   MAP_DATA_RESOLUTION,
@@ -28,17 +29,25 @@ type ProjectedLand = {
 function useProjectedPaths(highlight: DistortionPair | null) {
   return useMemo(() => {
     const landFc = featureCollection()
-    const merc = geoMercator().fitExtent(
-      [
-        [24, 24],
-        [W - 24, H - 24],
-      ],
-      landFc,
-    )
+    // Mercator: fit classroom latitudes (exclude Antarctica) so the familiar
+    // world fills the frame; clipExtent crops polar overflow.
+    const merc = geoMercator()
+      .fitExtent(
+        [
+          [12, 18],
+          [W - 12, H - 18],
+        ],
+        classroomFitFeature(),
+      )
+      .clipExtent([
+        [0, 0],
+        [W, H],
+      ])
+    // Equal Earth: full world, tight in the viewBox
     const equal = geoEqualEarth().fitExtent(
       [
-        [24, 24],
-        [W - 24, H - 24],
+        [12, 18],
+        [W - 12, H - 18],
       ],
       landFc,
     )
@@ -89,7 +98,13 @@ function MapSvg({
   paintId: string
 }) {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="map-svg" role="img" aria-label={title || 'World map'}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="map-svg"
+      role="img"
+      aria-label={title || 'World map'}
+      preserveAspectRatio="xMidYMid meet"
+    >
       <defs>
         <radialGradient id={`${paintId}-ocean`} cx="42%" cy="36%" r="78%">
           <stop offset="0%" stopColor="#6ec4ef" />
@@ -282,7 +297,7 @@ function GlobeSvg({ highlight }: { highlight: DistortionPair }) {
       role="img"
       aria-label="Globe — drag to spin"
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="map-svg map-globe-svg">
+      <svg viewBox={`0 0 ${W} ${H}`} className="map-svg map-globe-svg" preserveAspectRatio="xMidYMid meet">
         <defs>
           <radialGradient id={`${paintId}-bg`} cx="50%" cy="42%" r="70%">
             <stop offset="0%" stopColor="#1a4a6e" />
@@ -413,7 +428,7 @@ const VIEW_OPTIONS = [
 ] as const
 
 export default function MapSizeCompare({ onBack }: Props) {
-  const [view, setView] = useState<MapViewMode>('wipe')
+  const [view, setView] = useState<MapViewMode>('side')
   const [wipe, setWipe] = useState(55)
   const [pairId, setPairId] = useState(DISTORTION_PAIRS[0]!.id)
 
@@ -421,7 +436,7 @@ export default function MapSizeCompare({ onBack }: Props) {
   const { lands, overlays } = useProjectedPaths(pair)
 
   const reset = () => {
-    setView('wipe')
+    setView('side')
     setWipe(55)
     setPairId(DISTORTION_PAIRS[0]!.id)
   }
@@ -430,7 +445,7 @@ export default function MapSizeCompare({ onBack }: Props) {
     <>
       <TopBarLocal onBack={onBack} />
       <h2 className="screen-title">Map Size Compare</h2>
-      <p className="screen-sub">Mercator stretches the poles. Peek at real sizes!</p>
+      <p className="screen-sub map-screen-sub">Mercator stretches the poles. Peek at real sizes!</p>
 
       <div className="map-seg" role="group" aria-label="Map view">
         {VIEW_OPTIONS.map((opt) => (
@@ -473,22 +488,24 @@ export default function MapSizeCompare({ onBack }: Props) {
         )}
         {view === 'wipe' && (
           <div className="map-wipe-wrap">
-            <div className="map-wipe-base">
-              <MapSvg
-                kind="equal"
-                lands={lands}
-                overlays={overlays}
-                title="Equal Earth ← → Mercator"
-                paintId="wipe-eq"
-              />
-            </div>
-            <div className="map-wipe-top" style={{ width: `${wipe}%` }}>
-              <div className="map-wipe-inner" style={{ width: `${(100 / Math.max(wipe, 1)) * 100}%` }}>
-                <MapSvg kind="mercator" lands={lands} overlays={overlays} title="" paintId="wipe-m" />
+            <div className="map-wipe-frame">
+              <div className="map-wipe-base">
+                <MapSvg
+                  kind="equal"
+                  lands={lands}
+                  overlays={overlays}
+                  title="Equal Earth ← → Mercator"
+                  paintId="wipe-eq"
+                />
               </div>
-            </div>
-            <div className="map-wipe-handle" style={{ left: `${wipe}%` }} aria-hidden>
-              <span />
+              <div className="map-wipe-top" style={{ width: `${wipe}%` }}>
+                <div className="map-wipe-inner" style={{ width: `${(100 / Math.max(wipe, 1)) * 100}%` }}>
+                  <MapSvg kind="mercator" lands={lands} overlays={overlays} title="" paintId="wipe-m" />
+                </div>
+              </div>
+              <div className="map-wipe-handle" style={{ left: `${wipe}%` }} aria-hidden>
+                <span />
+              </div>
             </div>
             <label className="map-wipe-slider">
               <span className="sr-only">Reveal Mercator vs Equal Earth</span>
@@ -503,6 +520,12 @@ export default function MapSizeCompare({ onBack }: Props) {
           </div>
         )}
       </div>
+
+      {view === 'side' ? (
+        <p className="map-kid-line" role="note">
+          Top stretches the poles · Bottom is true size
+        </p>
+      ) : null}
 
       <div className="map-pairs" role="group" aria-label="Highlight distortion pairs">
         {DISTORTION_PAIRS.map((p) => (

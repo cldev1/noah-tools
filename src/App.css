@@ -9,6 +9,20 @@
   flex-direction: column;
 }
 
+/* Map Size Compare needs a wider stage for teaching side-by-side */
+.app-map {
+  max-width: min(720px, 100%);
+  width: 100%;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+@media (min-width: 768px) {
+  .app-map {
+    max-width: min(860px, 96vw);
+  }
+}
+
 .topbar {
   display: flex;
   align-items: center;
@@ -719,23 +733,27 @@
 /* —— Map Size Compare —— */
 .tool-card[data-id='map'] .tool-emoji { background: #e4f3ff; }
 
+.map-screen-sub {
+  margin-bottom: 10px;
+}
+
 .map-seg {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .map-seg-btn {
-  min-height: 48px;
-  border-radius: 16px;
-  padding: 10px 8px;
+  min-height: 38px;
+  border-radius: 12px;
+  padding: 6px 6px;
   background: var(--card);
   box-shadow: var(--shadow);
   font-weight: 800;
-  font-size: 0.92rem;
+  font-size: 0.78rem;
   color: var(--ink-muted);
-  border: 3px solid transparent;
+  border: 2px solid transparent;
 }
 
 .map-seg-btn.active {
@@ -745,18 +763,43 @@
 }
 
 .map-stage {
-  border-radius: 28px;
+  border-radius: 24px;
   overflow: hidden;
   box-shadow: var(--shadow);
   background: #0d3554;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+  min-height: 58vh;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-stage > .map-svg,
+.map-stage > .map-globe-wrap,
+.map-stage > .map-wipe-wrap,
+.map-stage > .map-side {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 58vh;
 }
 
 .map-svg {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   vertical-align: top;
+}
+
+.map-kid-line {
+  margin: 0 0 10px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: #fff4df;
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
 }
 
 .map-ocean-vignette {
@@ -806,18 +849,49 @@
 
 .map-side {
   display: grid;
-  gap: 8px;
-  padding: 8px;
+  grid-template-rows: 1fr 1fr;
+  gap: 6px;
+  padding: 6px;
+  min-height: 58vh;
+  height: 100%;
+}
+
+.map-side .map-svg {
+  min-height: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .map-wipe-wrap {
+  overflow: hidden;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 58vh;
+}
+
+.map-wipe-frame {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
   overflow: hidden;
 }
 
 .map-wipe-base {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
   width: 100%;
 }
+
+.map-wipe-base .map-svg {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
 
 .map-wipe-top {
   position: absolute;
@@ -895,26 +969,34 @@
 
 .map-pairs {
   display: grid;
-  gap: 8px;
-  margin-bottom: 12px;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 520px) {
+  .map-pairs {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .map-pair-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-align: left;
-  min-height: 52px;
-  padding: 12px 14px;
-  border-radius: 16px;
+  min-height: 42px;
+  padding: 8px 10px;
+  border-radius: 12px;
   background: var(--card);
   box-shadow: var(--shadow);
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   font-weight: 700;
 }
 
 .map-pair-btn strong {
-  font-size: 0.98rem;
+  font-size: 0.86rem;
+  line-height: 1.2;
 }
 
 .map-pair-btn.active {
@@ -924,10 +1006,10 @@
 
 .map-callout {
   background: var(--card);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: var(--shadow);
-  padding: 14px 16px;
-  border: 3px solid rgba(126, 200, 200, 0.45);
+  padding: 10px 12px;
+  border: 2px solid rgba(126, 200, 200, 0.45);
 }
 
 .map-callout-title {
@@ -957,6 +1039,15 @@
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 58vh;
+  height: 100%;
+}
+
+.map-globe-wrap .map-svg {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .map-globe-wrap:active {
@@ -998,5 +1089,18 @@
 @media (min-width: 640px) {
   .map-seg {
     grid-template-columns: repeat(5, 1fr);
+  }
+
+  .map-seg-btn {
+    font-size: 0.82rem;
+    min-height: 40px;
+  }
+
+  .map-stage,
+  .map-stage > .map-svg,
+  .map-stage > .map-globe-wrap,
+  .map-stage > .map-wipe-wrap,
+  .map-stage > .map-side {
+    min-height: 62vh;
   }
 }

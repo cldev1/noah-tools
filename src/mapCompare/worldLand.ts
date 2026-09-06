@@ -66,6 +66,42 @@ export function highlightFeatures(): MapFeature[] {
   return ne50m.highlights.features as MapFeature[]
 }
 
+
+/** Latitude band for classroom Mercator fit (exclude Antarctica blow-up). */
+const CLASSROOM_LAT_MIN = -55
+const CLASSROOM_LAT_MAX = 72
+
+/**
+ * Fit target for Mercator: geographic window ~lat −55…72 so the familiar
+ * classroom world fills the frame (Antarctica would otherwise shrink everything).
+ * Full land is still drawn; projection.clipExtent crops polar overflow.
+ */
+export function classroomFitFeature(): FeatureCollection<Polygon | MultiPolygon, MapProps> {
+  return {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        id: 'classroom-box',
+        properties: { name: 'Classroom', id: 'classroom-box', kind: 'land' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [-179.5, CLASSROOM_LAT_MIN],
+              [179.5, CLASSROOM_LAT_MIN],
+              [179.5, CLASSROOM_LAT_MAX],
+              [-179.5, CLASSROOM_LAT_MAX],
+              [-179.5, CLASSROOM_LAT_MIN],
+            ],
+          ],
+        },
+      },
+    ],
+  }
+}
+
+
 /** Combined collection used to fit projections (land extent). */
 export function featureCollection(): FeatureCollection<Polygon | MultiPolygon, MapProps> {
   return landFeatureCollection()
