@@ -1,22 +1,23 @@
 :root {
-  --bg: #f7f3ea;
-  --bg-soft: #fffdf8;
-  --ink: #2c3e3a;
-  --ink-muted: #5a6f69;
-  --mint: #7ec8c8;
-  --mint-deep: #4aa8a8;
+  color-scheme: dark;
+  --bg: #121a1c;
+  --bg-soft: #1a2428;
+  --ink: #f4f0e6;
+  --ink-muted: #b7c5c1;
+  --mint: #6ee0d8;
+  --mint-deep: #2eb8b0;
   --peach: #ffc9a8;
   --coral: #ff8f7a;
   --sun: #ffd56b;
   --sky: #8ec5f0;
   --lavender: #c9b6e4;
-  --leaf: #8bc98b;
-  --card: #ffffff;
-  --shadow: 0 8px 24px rgba(44, 62, 58, 0.1);
+  --leaf: #8fd98f;
+  --card: #1c2a2c;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   --radius: 24px;
   --tap: 56px;
   font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
-  line-height: 1.4;
+  line-height: 1.45;
   font-weight: 600;
   color: var(--ink);
   background: var(--bg);
@@ -29,17 +30,24 @@
   box-sizing: border-box;
 }
 
+html {
+  color-scheme: dark;
+  background: var(--bg);
+}
+
 html, body, #root {
   margin: 0;
   min-height: 100%;
+  background-color: var(--bg);
 }
 
 body {
   min-width: 320px;
+  color: var(--ink);
   background:
-    radial-gradient(circle at 12% 8%, #ffe8c8 0%, transparent 42%),
-    radial-gradient(circle at 90% 4%, #d8f0ef 0%, transparent 38%),
-    radial-gradient(circle at 70% 90%, #e8dff5 0%, transparent 40%),
+    radial-gradient(circle at 12% 8%, rgba(255, 197, 120, 0.14) 0%, transparent 42%),
+    radial-gradient(circle at 90% 4%, rgba(110, 224, 216, 0.12) 0%, transparent 38%),
+    radial-gradient(circle at 70% 90%, rgba(201, 182, 228, 0.12) 0%, transparent 40%),
     var(--bg);
 }
 

@@ -132,13 +132,13 @@
   display: grid;
   place-items: center;
   font-size: 2rem;
-  background: #eef8f6;
+  background: #243a38;
 }
 
-.tool-card[data-id='germ'] .tool-emoji { background: #dff5f2; }
-.tool-card[data-id='wash'] .tool-emoji { background: #e8f2ff; }
-.tool-card[data-id='bath'] .tool-emoji { background: #efe8ff; }
-.tool-card[data-id='potty'] .tool-emoji { background: #fff3df; }
+.tool-card[data-id='germ'] .tool-emoji { background: #1e3a36; }
+.tool-card[data-id='wash'] .tool-emoji { background: #1e3244; }
+.tool-card[data-id='bath'] .tool-emoji { background: #2c2640; }
+.tool-card[data-id='potty'] .tool-emoji { background: #3a2e1c; }
 
 .tool-copy h2 {
   margin: 0 0 4px;
@@ -163,13 +163,13 @@
 }
 
 .badge.live {
-  background: #d6f5e8;
-  color: #1f7a55;
+  background: #16463a;
+  color: #7eecc0;
 }
 
 .badge.soon {
-  background: #eceff1;
-  color: #607d8b;
+  background: #2a3438;
+  color: #a8b8b4;
 }
 
 .choice-grid {
@@ -196,12 +196,12 @@
 
 .choice-btn.tummy {
   border-color: rgba(255, 197, 120, 0.7);
-  background: linear-gradient(180deg, #fff, #fff8ee);
+  background: linear-gradient(180deg, #243028, #2e261c);
 }
 
 .choice-btn.teeth {
   border-color: rgba(142, 197, 240, 0.75);
-  background: linear-gradient(180deg, #fff, #eef7ff);
+  background: linear-gradient(180deg, #1e2a34, #1c2838);
 }
 
 .choice-btn.mode {
@@ -218,9 +218,9 @@
   flex-shrink: 0;
 }
 
-.choice-btn.tummy .choice-icon { background: #ffe4bc; }
-.choice-btn.teeth .choice-icon { background: #d7ebff; }
-.choice-btn.mode .choice-icon { background: #dff3f1; }
+.choice-btn.tummy .choice-icon { background: #e8a86a; }
+.choice-btn.teeth .choice-icon { background: #6aa8e0; }
+.choice-btn.mode .choice-icon { background: #3a9a92; }
 
 .choice-btn strong {
   display: block;
@@ -276,8 +276,8 @@
   margin: 0;
   text-align: center;
   font-size: 0.85rem;
-  color: rgba(45, 40, 30, 0.7);
-  background: rgba(255, 255, 255, 0.65);
+  color: #f4f0e6;
+  background: rgba(12, 20, 22, 0.78);
   padding: 8px 10px;
   border-radius: 12px;
   z-index: 3;
@@ -346,9 +346,9 @@
 .cam-note {
   margin: 0 0 8px;
   padding: 10px 14px;
-  background: #fff4e5;
+  background: #3a2c16;
   border-radius: 14px;
-  color: #8a5a20;
+  color: #ffd9a0;
   font-size: 0.92rem;
 }
 
@@ -505,7 +505,7 @@
 .progress-bar {
   height: 14px;
   border-radius: 999px;
-  background: #e8efec;
+  background: #2a3836;
   overflow: hidden;
 }
 
@@ -557,15 +557,15 @@
 
 .result-hint {
   font-weight: 700;
-  color: #c24d38 !important;
+  color: #ff9a86 !important;
 }
 
 .percent {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  background: #fff4ef;
-  color: #c24d38;
+  background: #3a241e;
+  color: #ff9a86;
   padding: 10px 16px;
   border-radius: 999px;
   font-weight: 800;
@@ -577,8 +577,8 @@
 }
 
 .percent.clean-pct {
-  background: #e8f8ee;
-  color: #2f8a55;
+  background: #16463a;
+  color: #7eecc0;
 }
 
 .confetti {
@@ -605,9 +605,9 @@
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, var(--mint-deep), var(--mint));
+  background: linear-gradient(135deg, #1a8a82, #2eb8b0);
   color: #fff;
-  box-shadow: 0 8px 18px rgba(74, 168, 168, 0.35);
+  box-shadow: 0 8px 18px rgba(46, 184, 176, 0.32);
 }
 
 .btn.secondary {
@@ -715,7 +715,7 @@
 
 .cheer-line {
   font-weight: 800;
-  color: #2f8a55 !important;
+  color: #7eecc0 !important;
   font-size: 1.05rem;
 }
 
@@ -731,7 +731,7 @@
 }
 
 /* —— Map Size Compare —— */
-.tool-card[data-id='map'] .tool-emoji { background: #e4f3ff; }
+.tool-card[data-id='map'] .tool-emoji { background: #1c3448; }
 
 .map-screen-sub {
   margin-bottom: 10px;
@@ -759,7 +759,7 @@
 .map-seg-btn.active {
   color: var(--ink);
   border-color: rgba(142, 197, 240, 0.85);
-  background: linear-gradient(180deg, #fff, #eef7ff);
+  background: linear-gradient(180deg, #243848, #1c3040);
 }
 
 .map-stage {
@@ -796,7 +796,7 @@
   font-weight: 800;
   font-size: 0.95rem;
   color: var(--ink);
-  background: #fff4df;
+  background: #3a2e16;
   border-radius: 14px;
   padding: 8px 12px;
   box-shadow: var(--shadow);
@@ -947,18 +947,18 @@
 
 .map-wipe-handle span::before {
   left: 7px;
-  border-right: 7px solid var(--ink-muted);
+  border-right: 7px solid #2c3e3a;
 }
 
 .map-wipe-handle span::after {
   right: 7px;
-  border-left: 7px solid var(--ink-muted);
+  border-left: 7px solid #2c3e3a;
 }
 
 .map-wipe-slider {
   display: block;
   padding: 8px 14px 14px;
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.72));
+  background: linear-gradient(180deg, transparent, rgba(12, 22, 28, 0.88));
 }
 
 .map-wipe-slider input[type='range'] {
@@ -1001,7 +1001,7 @@
 
 .map-pair-btn.active {
   border-color: rgba(255, 197, 120, 0.85);
-  background: linear-gradient(180deg, #fff, #fff8ee);
+  background: linear-gradient(180deg, #2a261c, #32281c);
 }
 
 .map-callout {
@@ -1027,7 +1027,7 @@
 .map-kid-tip {
   color: var(--ink) !important;
   font-weight: 800 !important;
-  background: #fff4df;
+  background: #3a2e16;
   padding: 10px 12px;
   border-radius: 14px;
   margin-bottom: 0 !important;

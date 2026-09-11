@@ -2,7 +2,7 @@
 
 A kid-friendly multi-tool web app for toddler Noah.
 
-Soft, playful, phone-first. Pure client-side SPA (no accounts, no backend).
+Soft, playful, phone-first, readable dark default. Pure client-side SPA (no accounts, no backend).
 
 **Germ Scanner** and **Map Size Compare** are live. More tools are on the hub as Coming soon.
 
@@ -51,4 +51,4 @@ Site is published from the gh-pages branch. Sample Actions file: docs/github-pag
 
 - Vite + React + TypeScript
 - d3-geo (Mercator + Equal Earth) + Natural Earth 50m GeoJSON
-- Plain CSS (soft mint / peach / sky palette, large tap targets)
+- Plain CSS (readable dark default, mint / peach / sky accents, large tap targets)
